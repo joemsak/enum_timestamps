@@ -6,7 +6,6 @@ gemspec
 
 group :development do
   gem 'pg', "~> 1.2.3"
-  gem 'rspec-rails', "~> 5.0.1"
   gem 'pessimize', "~> 0.4.0"
 end
 
