@@ -5,7 +5,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 gemspec
 
 group :development do
-  gem 'pg'
+  gem 'pg', "~> 1.2.3"
+  gem 'rspec-rails', "~> 5.0.1"
+  gem 'pessimize', "~> 0.4.0"
 end
 
 # To use a debugger
