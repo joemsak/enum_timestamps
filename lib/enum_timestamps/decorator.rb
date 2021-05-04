@@ -39,7 +39,7 @@ module EnumTimestamps
 
     private
     def guaranteed_timestamp
-      @gts ||= get_timestamp(guaranteed: true)
+      @gts ||= @ts ||= get_timestamp(guaranteed: true)
     end
 
     def track_change?
