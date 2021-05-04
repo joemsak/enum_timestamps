@@ -7,6 +7,7 @@ gemspec
 group :development do
   gem 'pg', "~> 1.2.3"
   gem 'pessimize', "~> 0.4.0"
+  gem 'pry-rails', "~> 0.3.9"
 end
 
 # To use a debugger
