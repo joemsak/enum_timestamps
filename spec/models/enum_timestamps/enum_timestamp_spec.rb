@@ -2,6 +2,19 @@ require 'rails_helper'
 
 module EnumTimestamps
   RSpec.describe EnumTimestamp, type: :model do
+    before do
+      User.enum status: %i[
+        invited
+        pending
+        approved
+        rejected
+        deleted
+      ]
+
+      User.send(:include, EnumTimestamps)
+      User.track_enum_changes :status
+    end
+
     describe "#<enum_field_identifier>_at" do
       it "manages them automatically" do
         freeze_time do
