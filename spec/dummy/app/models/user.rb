@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include EnumTimestamps
+
   enum status: %i[
     invited
     pending
@@ -6,4 +8,6 @@ class User < ApplicationRecord
     rejected
     deleted
   ]
+
+  track_enum_changes :status
 end

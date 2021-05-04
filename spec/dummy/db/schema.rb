@@ -10,10 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_03_232421) do
+ActiveRecord::Schema.define(version: 2021_05_04_001021) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "enum_timestamps", force: :cascade do |t|
+    t.integer "model_id", null: false
+    t.string "model_type", null: false
+    t.string "field_name", null: false
+    t.integer "identifier", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["field_name", "identifier"], name: "index_enum_timestamps_on_field_name_and_identifier"
+    t.index ["field_name"], name: "index_enum_timestamps_on_field_name"
+    t.index ["identifier"], name: "index_enum_timestamps_on_identifier"
+    t.index ["model_id", "model_type", "field_name", "identifier"], name: "enum_timestamps_unique_index", unique: true
+    t.index ["model_id", "model_type"], name: "index_enum_timestamps_on_model_id_and_model_type"
+  end
 
   create_table "users", force: :cascade do |t|
     t.integer "status", default: 0, null: false
