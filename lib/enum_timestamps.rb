@@ -28,16 +28,12 @@ module EnumTimestamps
   class_methods do
     def track_enum_changes(*enum_fields)
       enum_fields.each do |field_name|
-        _track_enum_changes!(field_name)
+        after_commit -> { track_enum_timestamps(field_name) }
         _define_tracker_methods(field_name)
       end
     end
 
     private
-    def _track_enum_changes!(field_name)
-      after_commit -> { track_enum_timestamps(field_name) }
-    end
-
     def _define_tracker_methods(field_name)
       enum_method = String(field_name).pluralize
 
