@@ -7,8 +7,6 @@ module EnumTimestamps
   autoload :Decorator, "enum_timestamps/decorator"
 
   included do
-    attr_accessor :enum_tracker
-
     has_many :enum_timestamps,
       as: :model,
       class_name: "::EnumTimestamps::EnumTimestamp"
