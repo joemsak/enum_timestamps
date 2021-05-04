@@ -4,25 +4,23 @@ require "enum_timestamps/engine"
 module EnumTimestamps
   extend ActiveSupport::Concern
 
+  autoload :Decorator, "enum_timestamps/decorator"
+
   included do
+    attr_accessor :enum_tracker
+
     has_many :enum_timestamps,
       as: :model,
       class_name: "::EnumTimestamps::EnumTimestamp"
   end
 
+  private
   def track_enum_timestamps(field_name)
-    enum_method = String(field_name).pluralize
+    _enum_timestamps_decorator.new(field_name, model: self).track_timestamp!
+  end
 
-    timestamp = enum_timestamps.find_or_initialize_by({
-      field_name: field_name,
-      identifier: self.class.send(enum_method)[send(field_name)]
-    })
-
-    if timestamp.new_record?
-      timestamp.save
-    elsif send("saved_change_to_#{field_name}?")
-      timestamp.touch
-    end
+  def _enum_timestamps_decorator
+    self.class._enum_timestamps_decorator
   end
 
   class_methods do
@@ -33,20 +31,21 @@ module EnumTimestamps
       end
     end
 
+    def _enum_timestamps_decorator
+      Decorator
+    end
+
     private
     def _define_tracker_methods(field_name)
-      enum_method = String(field_name).pluralize
+      tracker = _enum_timestamps_decorator.new(field_name, klass: self)
 
-      send(enum_method).each do |name, identifier|
+      tracker.enum_map.each do |name, identifier|
         define_method "#{name}_at" do
-          if timestamp = enum_timestamps.find_by({
-               field_name: field_name,
-               identifier: identifier,
-             })
-            timestamp.updated_at
-          else
-            nil
-          end
+          _enum_timestamps_decorator.new(
+            field_name,
+            identifier: identifier,
+            model: self
+          ).timestamp_updated_at
         end
       end
     end
